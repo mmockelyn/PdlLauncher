@@ -1,6 +1,7 @@
 const electron          = require('electron')
 const url               = require('url')
 const path              = require('path')
+const ejse              = require('ejs-electron')
 const { autoUpdater }   = require('electron-updater')
 const isDev             = require('electron-is-dev')
 const log               = require('electron-log');
@@ -9,18 +10,18 @@ const app               = electron.app
 const BrowserWindow     = electron.BrowserWindow
 const ipcMain           = electron.ipcMain
 
-autoUpdater.logger = log
+autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
 let win
 
-function senStatusToWindow(text) {
-    log.info(text)
-}
+function sendStatusToWindow(text) {
+    log.info(text);
+  }
 
 function createWindow() {
-    win = new BrowserWindow({
+        win = new BrowserWindow({
         width: 1080,
         height: 768,
         icon: getPlatformIcon('Trainznation'),
@@ -38,16 +39,18 @@ function createWindow() {
         slashes: true
     }))
 
-    if(isDev) {
+    if(isDev){
+        win.webContents.openDevTools()
+    }else{
         win.webContents.openDevTools()
     }
+
     win.removeMenu()
     win.setResizable(true)
 
     win.on('close', () => {
         win = null
     })
-
     return win
 }
 
